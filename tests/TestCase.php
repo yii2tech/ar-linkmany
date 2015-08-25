@@ -87,8 +87,6 @@ class TestCase extends \PHPUnit_Framework_TestCase
         $columns = [
             'itemId' => 'integer',
             'groupId' => 'integer',
-            'title' => 'string',
-            'description' => 'string',
             'PRIMARY KEY(itemId, groupId)'
         ];
         $db->createCommand()->createTable($table, $columns)->execute();
@@ -101,5 +99,26 @@ class TestCase extends \PHPUnit_Framework_TestCase
             'PRIMARY KEY(itemId, groupId)'
         ];
         $db->createCommand()->createTable($table, $columns)->execute();
+
+        // Data :
+
+        $db->createCommand()->batchInsert('Item', ['name'], [
+            ['item1'],
+            ['item2'],
+        ])->execute();
+
+        $db->createCommand()->batchInsert('Group', ['name'], [
+            ['group1'],
+            ['group2'],
+            ['group3'],
+            ['group4'],
+        ])->execute();
+
+        $db->createCommand()->batchInsert('ItemGroup', ['itemId', 'groupId'], [
+            [1, 1],
+            [1, 2],
+            [2, 3],
+            [2, 4],
+        ])->execute();
     }
 }

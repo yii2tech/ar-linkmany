@@ -9,6 +9,8 @@ use yii2tech\ar\linkmany\LinkManyBehavior;
  * @property integer $id
  * @property string $name
  *
+ * @property array $groupIds
+ *
  * @property Group[]|array $groups
  */
 class Item extends ActiveRecord
@@ -21,7 +23,8 @@ class Item extends ActiveRecord
         return [
             'linkManyBehavior' => [
                 'class' => LinkManyBehavior::className(),
-                'variationsRelation' => 'translations',
+                'relation' => 'groups',
+                'relationReferenceAttribute' => 'groupIds',
             ],
         ];
     }
@@ -41,6 +44,7 @@ class Item extends ActiveRecord
     {
         return [
             ['name', 'required'],
+            ['groupIds', 'safe'],
         ];
     }
 
