@@ -96,6 +96,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
             'itemId' => 'integer',
             'groupId' => 'integer',
             'note' => 'string',
+            'callbackNote' => 'string',
             'PRIMARY KEY(itemId, groupId)'
         ];
         $db->createCommand()->createTable($table, $columns)->execute();

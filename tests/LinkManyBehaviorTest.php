@@ -120,4 +120,24 @@ class LinkManyBehaviorTest extends TestCase
 
         $this->assertFalse($item->isRelationPopulated('groups'));
     }
+
+    /**
+     * @depends testNewRecord
+     */
+    public function testExtraColumns()
+    {
+        $item = new Item();
+        $item->name = 'new item';
+        $item->dataGroupIds = [1, 3];
+        $item->save(false);
+
+        /* @var $refreshedItem Item|LinkManyBehavior */
+        $refreshedItem = Item::findOne($item->id);
+        $this->assertEquals($item->dataGroupIds, $refreshedItem->dataGroupIds);
+
+        $viaModels = $item->itemGroupData;
+        $this->assertCount(2, $viaModels);
+        $this->assertEquals('test', $viaModels[0]->note);
+        $this->assertEquals('callback', $viaModels[0]->callbackNote);
+    }
 }

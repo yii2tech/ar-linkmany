@@ -34,6 +34,19 @@ class LinkManyBehavior extends Behavior
      * "many to many" relation values.
      */
     public $relationReferenceAttribute;
+    /**
+     * @var array additional column values to be saved into the junction table.
+     * Each column value can be a callable, which will be invoked during linking to compose actual value.
+     * For example:
+     *
+     * ```php
+     * [
+     *     'type' => 'user-defined',
+     *     'createdAt' => function() {return time();},
+     * ]
+     * ```
+     */
+    public $extraColumns = [];
 
     /**
      * @var null|array
@@ -220,7 +233,26 @@ class LinkManyBehavior extends Behavior
         }
 
         foreach ($linkModels as $model) {
-            $this->owner->link($this->relation, $model);
+            $this->owner->link($this->relation, $model, $this->composeLinkExtraColumns());
         }
+    }
+
+    /**
+     * Composes actual link extra columns value from [[extraColumns]], resolving possible callbacks.
+     * @return array additional column values to be saved into the junction table.
+     */
+    protected function composeLinkExtraColumns()
+    {
+        if (empty($this->extraColumns)) {
+            return [];
+        }
+        $extraColumns = [];
+        foreach ($this->extraColumns as $column => $value) {
+            if (!is_scalar($value) && is_callable($value)) {
+                $value = call_user_func($value);
+            }
+            $extraColumns[$column] = $value;
+        }
+        return $extraColumns;
     }
 }
