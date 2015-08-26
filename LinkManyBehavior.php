@@ -16,7 +16,8 @@ use yii\db\BaseActiveRecord;
  * LinkManyBehavior
  *
  * @property BaseActiveRecord $owner
- * @property array|null $relationAttributeValue
+ * @property array|null $relationReferenceAttributeValue
+ * @property boolean $isRelationReferenceAttributeValueInitialized
  *
  * @author Paul Klimov <klimov.paul@gmail.com>
  * @since 1.0
@@ -41,15 +42,24 @@ class LinkManyBehavior extends Behavior
 
 
     /**
-     * @param array|null $value
+     * @param mixed $value
      */
     public function setRelationReferenceAttributeValue($value)
     {
+        if (!is_array($value)) {
+            if (empty($value)) {
+                if ($value !== null) {
+                    $value = [];
+                }
+            } else {
+                $value = [$value];
+            }
+        }
         $this->_relationReferenceAttributeValue = $value;
     }
 
     /**
-     * @return array
+     * @return array relation reference attribute value
      */
     public function getRelationReferenceAttributeValue()
     {
@@ -57,6 +67,14 @@ class LinkManyBehavior extends Behavior
             $this->_relationReferenceAttributeValue = $this->initRelationReferenceAttributeValue();
         }
         return $this->_relationReferenceAttributeValue;
+    }
+
+    /**
+     * @return boolean whether the relation reference attribute value has been initialized or not.
+     */
+    public function getIsRelationReferenceAttributeValueInitialized()
+    {
+        return ($this->_relationReferenceAttributeValue !== null);
     }
 
     /**
@@ -172,6 +190,37 @@ class LinkManyBehavior extends Behavior
      */
     public function afterSave($event)
     {
-        // @todo
+        if (!$this->getIsRelationReferenceAttributeValueInitialized()) {
+            return;
+        }
+
+        $linkModels = [];
+        $unlinkModels = [];
+
+        $newReferences = array_unique($this->getRelationReferenceAttributeValue());
+        foreach ($this->owner->{$this->relation} as $relatedModel) {
+            /* @var $relatedModel ActiveRecordInterface */
+            $primaryKey = $this->normalizePrimaryKey($relatedModel->getPrimaryKey());
+            if (($primaryKeyPosition = array_search($primaryKey, $newReferences)) === false) {
+                $unlinkModels[] = $relatedModel;
+            } else {
+                unset($newReferences[$primaryKeyPosition]);
+            }
+        }
+
+        if (!empty($newReferences)) {
+            $relation = $this->owner->getRelation($this->relation);
+            /* @var $relatedClass ActiveRecordInterface */
+            $relatedClass = $relation->modelClass;
+            $linkModels = $relatedClass::findAll(array_values($newReferences));
+        }
+
+        foreach ($unlinkModels as $model) {
+            $this->owner->unlink($this->relation, $model);
+        }
+
+        foreach ($linkModels as $model) {
+            $this->owner->link($this->relation, $model);
+        }
     }
 }
