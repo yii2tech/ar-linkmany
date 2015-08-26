@@ -1,7 +1,7 @@
 {
     "name": "yii2tech/ar-linkmany",
     "description": "Provides support for many-to-many relations saving in Yii2 ActiveRecord",
-    "keywords": ["yii2", "active", "record", "many", "many-to-many", "many to many"],
+    "keywords": ["yii2", "active", "record", "relaton", "link", "many", "many-to-many", "many to many"],
     "type": "yii2-extension",
     "license": "BSD-3-Clause",
     "support": {

@@ -13,7 +13,30 @@ use yii\db\ActiveRecordInterface;
 use yii\db\BaseActiveRecord;
 
 /**
- * LinkManyBehavior
+ * LinkManyBehavior provides support for ActiveRecord many-to-many relation saving.
+ *
+ * Configuration example:
+ *
+ * ```php
+ * class Item extends ActiveRecord
+ * {
+ *     public function behaviors()
+ *     {
+ *         return [
+ *             'linkManyBehavior' => [
+ *                 'class' => LinkManyBehavior::className(),
+ *                 'relation' => 'groups',
+ *                 'relationReferenceAttribute' => 'groupIds',
+ *             ],
+ *         ];
+ *     }
+ *
+ *     public function getGroups()
+ *     {
+ *         return $this->hasMany(Group::className(), ['id' => 'groupId'])->viaTable('ItemGroup', ['itemId' => 'id']);
+ *     }
+ * }
+ * ```
  *
  * @property BaseActiveRecord $owner
  * @property array|null $relationReferenceAttributeValue
@@ -32,6 +55,7 @@ class LinkManyBehavior extends Behavior
     /**
      * @var string name of the owner model attribute, which should be used to set
      * "many to many" relation values.
+     * This will establish an owner virtual property, which can be used to specify related record primary keys.
      */
     public $relationReferenceAttribute;
     /**
@@ -49,13 +73,13 @@ class LinkManyBehavior extends Behavior
     public $extraColumns = [];
 
     /**
-     * @var null|array
+     * @var null|array relation reference attribute value
      */
     private $_relationReferenceAttributeValue;
 
 
     /**
-     * @param mixed $value
+     * @param mixed $value relation reference attribute value
      */
     public function setRelationReferenceAttributeValue($value)
     {
