@@ -1,5 +1,5 @@
-ActiveRecord Variation Extension for Yii 2
-==========================================
+ActiveRecord Many-to-Many Saving Extension for Yii2
+===================================================
 
 This extension provides support for ActiveRecord many-to-many relation saving.
 For example: single "item" may belong to several "groups", each group may be linked with several items.
