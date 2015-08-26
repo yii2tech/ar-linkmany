@@ -24,12 +24,12 @@ class Item extends ActiveRecord
     public function behaviors()
     {
         return [
-            'linkManyBehavior' => [
+            'linkGroupBehavior' => [
                 'class' => LinkManyBehavior::className(),
                 'relation' => 'groups',
                 'relationReferenceAttribute' => 'groupIds',
             ],
-            'linkManyDataBehavior' => [
+            'linkDataGroupBehavior' => [
                 'class' => LinkManyBehavior::className(),
                 'relation' => 'dataGroups',
                 'relationReferenceAttribute' => 'dataGroupIds',

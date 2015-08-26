@@ -46,7 +46,7 @@ class Item extends ActiveRecord
     public function behaviors()
     {
         return [
-            'linkManyBehavior' => [
+            'linkGroupBehavior' => [
                 'class' => LinkManyBehavior::className(),
                 'relation' => 'groups', // relation, which will be handled
                 'relationReferenceAttribute' => 'groupIds', // virtual attribute, which is used for related records specification
