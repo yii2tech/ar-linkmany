@@ -2,6 +2,8 @@
 
 namespace yii2tech\tests\unit\ar\linkmany;
 
+use Yii;
+use yii\db\Query;
 use yii2tech\ar\linkmany\LinkManyBehavior;
 use yii2tech\tests\unit\ar\linkmany\data\Item;
 
@@ -79,6 +81,22 @@ class LinkManyBehaviorTest extends TestCase
 
         $refreshedItem = Item::findOne($item->id);
         $this->assertEquals([], $refreshedItem->groupIds);
+
+        $this->assertEquals(2, (new Query())->from('ItemGroup')->count());
+    }
+
+    /**
+     * @depends testRemoveAllReferences
+     */
+    public function testRemoveAllReferencesNoDelete()
+    {
+        /* @var $item Item|LinkManyBehavior */
+        $item = Item::findOne(1);
+        $item->groupIds = [];
+        $item->deleteOnUnlink = false;
+        $item->save(false);
+
+        $this->assertEquals(4, (new Query())->from('ItemGroup')->count());
     }
 
     /**

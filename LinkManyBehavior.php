@@ -71,6 +71,10 @@ class LinkManyBehavior extends Behavior
      * ```
      */
     public $extraColumns = [];
+    /**
+     * @var boolean whether to delete the pivot model or table row on unlink.
+     */
+    public $deleteOnUnlink = true;
 
     /**
      * @var null|array relation reference attribute value
@@ -253,7 +257,7 @@ class LinkManyBehavior extends Behavior
         }
 
         foreach ($unlinkModels as $model) {
-            $this->owner->unlink($this->relation, $model);
+            $this->owner->unlink($this->relation, $model, $this->deleteOnUnlink);
         }
 
         foreach ($linkModels as $model) {
