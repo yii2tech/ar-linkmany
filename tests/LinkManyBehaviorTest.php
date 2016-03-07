@@ -158,4 +158,23 @@ class LinkManyBehaviorTest extends TestCase
         $this->assertEquals('test', $viaModels[0]->note);
         $this->assertEquals('callback', $viaModels[0]->callbackNote);
     }
+
+    /**
+     * @depends testNewRecord
+     */
+    public function testDelete()
+    {
+        $item = new Item();
+        $item->name = 'new item';
+        $item->groupIds = [1, 3];
+        $item->save(false);
+
+        $item->delete();
+
+        $junctionTableCount = (new Query())
+            ->from('ItemGroup')
+            ->andWhere(['itemId' => $item->id])
+            ->count();
+        $this->assertEquals(0, $junctionTableCount);
+    }
 }
