@@ -262,7 +262,7 @@ class LinkManyBehavior extends Behavior
         }
 
         foreach ($linkModels as $model) {
-            $this->owner->link($this->relation, $model, $this->composeLinkExtraColumns());
+            $this->owner->link($this->relation, $model, $this->composeLinkExtraColumns($model));
         }
     }
 
@@ -277,9 +277,10 @@ class LinkManyBehavior extends Behavior
 
     /**
      * Composes actual link extra columns value from [[extraColumns]], resolving possible callbacks.
+     * @param null|ActiveRecordInterface $model
      * @return array additional column values to be saved into the junction table.
      */
-    protected function composeLinkExtraColumns()
+    protected function composeLinkExtraColumns($model = null)
     {
         if (empty($this->extraColumns)) {
             return [];
@@ -287,7 +288,7 @@ class LinkManyBehavior extends Behavior
         $extraColumns = [];
         foreach ($this->extraColumns as $column => $value) {
             if (!is_scalar($value) && is_callable($value)) {
-                $value = call_user_func($value);
+                $value = call_user_func($value, $model);
             }
             $extraColumns[$column] = $value;
         }
