@@ -1,8 +1,8 @@
 Yii 2 ActiveRecord Many-to-Many saving extension Change Log
 ===========================================================
 
-1.0.2 under development
------------------------
+1.0.2, June 3, 2016
+-------------------
 
 - Enh #5: Added linked model to the `extraColumn` callable function arguments (sokoji)
 
