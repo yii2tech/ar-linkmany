@@ -61,14 +61,12 @@ class LinkManyBehavior extends Behavior
     /**
      * @var array additional column values to be saved into the junction table.
      * Each column value can be a callable, which will be invoked during linking to compose actual value.
-     * Starting from version 1.0.2, this callable may accept linked model instance as a first parameter.
      * For example:
      *
      * ```php
      * [
      *     'type' => 'user-defined',
      *     'createdAt' => function() {return time();},
-     *     'categoryId' => function ($model) {return $model->categoryId;},
      * ]
      * ```
      */
@@ -264,7 +262,7 @@ class LinkManyBehavior extends Behavior
         }
 
         foreach ($linkModels as $model) {
-            $this->owner->link($this->relation, $model, $this->composeLinkExtraColumns($model));
+            $this->owner->link($this->relation, $model, $this->composeLinkExtraColumns());
         }
     }
 
@@ -279,10 +277,9 @@ class LinkManyBehavior extends Behavior
 
     /**
      * Composes actual link extra columns value from [[extraColumns]], resolving possible callbacks.
-     * @param ActiveRecordInterface|null $model linked model instance.
      * @return array additional column values to be saved into the junction table.
      */
-    protected function composeLinkExtraColumns($model = null)
+    protected function composeLinkExtraColumns()
     {
         if (empty($this->extraColumns)) {
             return [];
@@ -290,7 +287,7 @@ class LinkManyBehavior extends Behavior
         $extraColumns = [];
         foreach ($this->extraColumns as $column => $value) {
             if (!is_scalar($value) && is_callable($value)) {
-                $value = call_user_func($value, $model);
+                $value = call_user_func($value);
             }
             $extraColumns[$column] = $value;
         }
