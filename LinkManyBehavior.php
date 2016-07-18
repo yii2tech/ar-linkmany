@@ -232,7 +232,7 @@ class LinkManyBehavior extends Behavior
      */
     public function afterSave($event)
     {
-        if (!$this->getIsRelationReferenceAttributeValueInitialized()) {
+        if (!$this->getIsRelationReferenceAttributeValueInitialized() || !isset($this->owner->{$this->relation})) {
             return;
         }
 
