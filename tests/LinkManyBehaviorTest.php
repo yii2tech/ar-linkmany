@@ -21,7 +21,7 @@ class LinkManyBehaviorTest extends TestCase
         $this->assertEquals([], $behavior->getRelationReferenceAttributeValue());
 
         $behavior->setRelationReferenceAttributeValue('');
-        $this->assertEquals([], $behavior->getRelationReferenceAttributeValue());
+        $this->assertEquals('', $behavior->getRelationReferenceAttributeValue());
 
         $behavior->setRelationReferenceAttributeValue(null);
         $this->assertFalse($behavior->getIsRelationReferenceAttributeValueInitialized());
@@ -176,5 +176,20 @@ class LinkManyBehaviorTest extends TestCase
             ->andWhere(['itemId' => $item->id])
             ->count();
         $this->assertEquals(0, $junctionTableCount);
+    }
+
+    /**
+     * @depends testGetRelationReferenceAttributeValue
+     */
+    public function testValidate()
+    {
+        $item = new Item();
+        $item->name = 'new item';
+
+        $item->groupIds = [1, 3];
+        $this->assertTrue($item->validate());
+
+        $item->groupIds = ['string'];
+        $this->assertFalse($item->validate());
     }
 }

@@ -57,6 +57,7 @@ class Item extends ActiveRecord
         return [
             ['name', 'required'],
             ['groupIds', 'safe'],
+            ['groupIds', 'each', 'rule' => ['integer']],
         ];
     }
 

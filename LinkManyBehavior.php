@@ -89,15 +89,6 @@ class LinkManyBehavior extends Behavior
      */
     public function setRelationReferenceAttributeValue($value)
     {
-        if (!is_array($value)) {
-            if (empty($value)) {
-                if ($value !== null) {
-                    $value = [];
-                }
-            } else {
-                $value = [$value];
-            }
-        }
         $this->_relationReferenceAttributeValue = $value;
     }
 
@@ -241,7 +232,17 @@ class LinkManyBehavior extends Behavior
         $linkModels = [];
         $unlinkModels = [];
 
-        $newReferences = array_unique($this->getRelationReferenceAttributeValue());
+        $newReferences = $this->getRelationReferenceAttributeValue();
+        if (is_array($newReferences)) {
+            $newReferences = array_unique($newReferences);
+        } else {
+            if (empty($newReferences)) {
+                $newReferences = [];
+            } else {
+                $newReferences = [$newReferences];
+            }
+        }
+
         foreach ($this->owner->{$this->relation} as $relatedModel) {
             /* @var $relatedModel ActiveRecordInterface */
             $primaryKey = $this->normalizePrimaryKey($relatedModel->getPrimaryKey());
