@@ -1,5 +1,10 @@
-ActiveRecord Many-to-Many Saving Extension for Yii2
-===================================================
+<p align="center">
+    <a href="https://github.com/yii2tech" target="_blank">
+        <img src="https://avatars2.githubusercontent.com/u/12951949" height="100px">
+    </a>
+    <h1 align="center">ActiveRecord Many-to-Many Saving Extension for Yii2</h1>
+    <br>
+</p>
 
 This extension provides support for ActiveRecord many-to-many relation saving.
 For example: single "item" may belong to several "groups", each group may be linked with several items.
@@ -67,7 +72,7 @@ class Item extends ActiveRecord
 ```
 
 Being attached [[\yii2tech\ar\linkmany\LinkManyBehavior]] adds a virtual proprty to the owner ActiveRecord, which
-name is determined by [[\yii2tech\ar\linkmany\LinkManyBehavior::relationReferenceAttribute]]. You will be able to
+name is determined by [[\yii2tech\ar\linkmany\LinkManyBehavior::$relationReferenceAttribute]]. You will be able to
 specify related models primary keys via this attribute:
 
 ```php
@@ -125,7 +130,7 @@ $item->save(); // all groups except "5" will be removed
 
 ## Creating relation setup web interface <span id="creating-relation-setup-web-interface"></span>
 
-The main purpose of [[\yii2tech\ar\linkmany\LinkManyBehavior::relationReferenceAttribute]] is support for creating
+The main purpose of [[\yii2tech\ar\linkmany\LinkManyBehavior::$relationReferenceAttribute]] is support for creating
 many-to-many setup web interface. All you need to do is declare a validation rule for this virtual property in
 your ActiveRecord, so its value can be collected from the request:
 
@@ -181,11 +186,11 @@ class ItemController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view']);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
         }
+
+        return $this->render('create', [
+            'model' => $model,
+        ]);
     }
 
     // ...
