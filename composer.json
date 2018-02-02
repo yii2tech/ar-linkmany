@@ -20,7 +20,7 @@
         "yiisoft/yii2": "*"
     },
     "autoload": {
-        "psr-4": { "yii2tech\\ar\\linkmany\\": "" }
+        "psr-4": { "yii2tech\\ar\\linkmany\\": "src" }
     },
     "extra": {
         "branch-alias": {
