@@ -1,7 +1,7 @@
 Yii 2 ActiveRecord Many-to-Many saving extension Change Log
 ===========================================================
 
-1.0.3 under development
+1.0.3, February 9, 2018
 -----------------------
 
 - Bug #9: Fixed `LinkManyBehavior::$relationReferenceAttributeValue` can not be validated using `yii\validators\EachValidator` (klimov-paul)
